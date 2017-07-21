@@ -2,9 +2,27 @@ class App extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      VideoPlayerVideo: window.exampleVideoData[0],
-      VideoListVideos: window.exampleVideoData
+      VideoListVideos: [],
+      VideoPlayerVideo: null
     };
+  }
+
+  componentDidMount() {
+    this.getYouTubeVideos('corgis playing');
+  }
+
+  getYouTubeVideos(query) {
+    var options = {
+      key: this.props.API_KEY,
+      query: query
+    };
+
+    this.props.searchYouTube(options, (videos) =>
+      this.setState({
+        VideoListVideos: videos,
+        VideoPlayerVideo: videos[0]
+      })
+    );
   }
 
   handleVideoItemClick(video) {
@@ -17,7 +35,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Nav />
+        <Nav handleSearchInput={this.getYouTubeVideos.bind(this)}/>
         <div className="col-md-7">
           <VideoPlayer video={this.state.VideoPlayerVideo}/>
         </div>
